@@ -1,4 +1,5 @@
 {
+  "homepage": "https://adi-mor2009.github.io/lib-collection",
   "name": "lib-collection",
   "version": "0.1.0",
   "private": true,
@@ -23,6 +24,8 @@
     "xlsx": "^0.18.4"
   },
   "scripts": {
+    "predeploy": "npm run build",
+    "deploy": "gh-pages -b gh-pages -d build",
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
@@ -45,5 +48,8 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "devDependencies": {
+    "gh-pages": "^3.2.3"
   }
 }
