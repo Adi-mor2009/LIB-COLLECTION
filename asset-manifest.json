@@ -1,27 +1,27 @@
 {
   "files": {
-    "main.css": "/LIB-COLLECTION/static/css/main.13db898f.chunk.css",
-    "main.js": "/LIB-COLLECTION/static/js/main.7b615256.chunk.js",
-    "main.js.map": "/LIB-COLLECTION/static/js/main.7b615256.chunk.js.map",
-    "runtime-main.js": "/LIB-COLLECTION/static/js/runtime-main.a31f8fac.js",
-    "runtime-main.js.map": "/LIB-COLLECTION/static/js/runtime-main.a31f8fac.js.map",
+    "main.css": "/LIB-COLLECTION/static/css/main.af0c815a.chunk.css",
+    "main.js": "/LIB-COLLECTION/static/js/main.57041eb3.chunk.js",
+    "main.js.map": "/LIB-COLLECTION/static/js/main.57041eb3.chunk.js.map",
+    "runtime-main.js": "/LIB-COLLECTION/static/js/runtime-main.b71d4244.js",
+    "runtime-main.js.map": "/LIB-COLLECTION/static/js/runtime-main.b71d4244.js.map",
     "static/css/2.03caa7b5.chunk.css": "/LIB-COLLECTION/static/css/2.03caa7b5.chunk.css",
-    "static/js/2.089d7579.chunk.js": "/LIB-COLLECTION/static/js/2.089d7579.chunk.js",
-    "static/js/2.089d7579.chunk.js.map": "/LIB-COLLECTION/static/js/2.089d7579.chunk.js.map",
-    "static/js/3.a3bee684.chunk.js": "/LIB-COLLECTION/static/js/3.a3bee684.chunk.js",
-    "static/js/3.a3bee684.chunk.js.map": "/LIB-COLLECTION/static/js/3.a3bee684.chunk.js.map",
+    "static/js/2.27791c28.chunk.js": "/LIB-COLLECTION/static/js/2.27791c28.chunk.js",
+    "static/js/2.27791c28.chunk.js.map": "/LIB-COLLECTION/static/js/2.27791c28.chunk.js.map",
+    "static/js/3.9ca3f2df.chunk.js": "/LIB-COLLECTION/static/js/3.9ca3f2df.chunk.js",
+    "static/js/3.9ca3f2df.chunk.js.map": "/LIB-COLLECTION/static/js/3.9ca3f2df.chunk.js.map",
     "index.html": "/LIB-COLLECTION/index.html",
     "static/css/2.03caa7b5.chunk.css.map": "/LIB-COLLECTION/static/css/2.03caa7b5.chunk.css.map",
-    "static/css/main.13db898f.chunk.css.map": "/LIB-COLLECTION/static/css/main.13db898f.chunk.css.map",
-    "static/js/2.089d7579.chunk.js.LICENSE.txt": "/LIB-COLLECTION/static/js/2.089d7579.chunk.js.LICENSE.txt",
+    "static/css/main.af0c815a.chunk.css.map": "/LIB-COLLECTION/static/css/main.af0c815a.chunk.css.map",
+    "static/js/2.27791c28.chunk.js.LICENSE.txt": "/LIB-COLLECTION/static/js/2.27791c28.chunk.js.LICENSE.txt",
     "static/media/bootstrap-icons.css": "/LIB-COLLECTION/static/media/bootstrap-icons.c1d7432e.woff",
     "static/media/semantic.min.css": "/LIB-COLLECTION/static/media/outline-icons.ddae9b1b.woff"
   },
   "entrypoints": [
-    "static/js/runtime-main.a31f8fac.js",
+    "static/js/runtime-main.b71d4244.js",
     "static/css/2.03caa7b5.chunk.css",
-    "static/js/2.089d7579.chunk.js",
-    "static/css/main.13db898f.chunk.css",
-    "static/js/main.7b615256.chunk.js"
+    "static/js/2.27791c28.chunk.js",
+    "static/css/main.af0c815a.chunk.css",
+    "static/js/main.57041eb3.chunk.js"
   ]
 }
