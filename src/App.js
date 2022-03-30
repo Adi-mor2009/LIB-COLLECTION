@@ -135,6 +135,8 @@ function App() {
   async function handleInputEnter(pageNum) {
     setBibs([]);
     setTotalBibNumberInCollection(0);
+    setGlobalError(false);
+    setSuccess(false);
 
 
     setLoading(true);
@@ -322,12 +324,14 @@ function App() {
         <img src="https://haifa-primo.hosted.exlibrisgroup.com/primo-explore/custom/HAU/img/library-logo.png" alt="ספריית יונס וסוראיה נזריאן" />
         <div style={{ margin: "20px" }}>
           <h2>רשומות ביבליוגרפיות לפי מספר אוסף</h2>
-          <h4 style={{ marginLeft: 'auto !important', paddingTop: '30px' }}>:(collectionID יש להזין) הורדת קובץ אקסל של רשומות ביבליוגרפיות וקישורים לאובייקטים הדיגיטליים שבהן, על פי מספר אוסף בעלמא</h4>
         </div>
+        <Row id="collection-sub-title">
+          <h4>:(collectionID יש להזין) הורדת קובץ אקסל של רשומות ביבליוגרפיות וקישורים לאובייקטים הדיגיטליים שבהן, על פי מספר אוסף בעלמא</h4>
+        </Row>
         <Row id="rowForInput">
           <InputBox
             icon={<i className="bi bi-collection-fill"></i>}
-            placeholder="כאן יש להכניס מספר אוסף (Collection ID) לחיפוש ..."
+            placeholder="מספר אוסף (Collection ID)"
             onEnter={handleInputEnter}
             inputText={searchCollectionText}
             inputTextChange={(text) => setSearchCollectionText(text)}
