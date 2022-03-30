@@ -1,5 +1,14 @@
 .App {
   text-align: center;
+  background-image: linear-gradient(white,rgb(224, 223, 220), rgb(167, 165, 164),white);
+  min-height: 100vh;
+}
+
+@media (min-width: 992px) {
+  #rowForInput{
+      width:50%;
+      margin-left: auto;
+  }
 }
 
 .App-logo {

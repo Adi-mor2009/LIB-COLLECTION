@@ -1,13 +1,13 @@
 import './App.css';
-import { Container, Spinner, Alert, Button } from "react-bootstrap";
+import { Container, Spinner, Alert, Row } from "react-bootstrap";
 import InputBox from "./components/InputBox/InputBox";
 import { useEffect, useState } from 'react';
 import ApiDataService from './utils/ApiDataService';
 import BibModel from './model/BibModel';
-import ProgressComponent from './components/ProgressComponent/ProgressComponent'
-import BibCard from "./components/BibCard/BibCard"
-import HTMLtoDOCX from 'html-to-docx';
-import { saveAs } from 'file-saver';
+// import ProgressComponent from './components/ProgressComponent/ProgressComponent'
+// import BibCard from "./components/BibCard/BibCard"
+// import HTMLtoDOCX from 'html-to-docx';
+// import { saveAs } from 'file-saver';
 import * as XLSX from 'xlsx';
 //import { marc } from "marc4js"; 
 
@@ -17,7 +17,8 @@ function App() {
   const [searchCollectionText, setSearchCollectionText] = useState("");
   const [bibs, setBibs] = useState([]);
   const [globalError, setGlobalError] = useState(false);
-  const [errorMessage, setErrorMessage] = useState("");
+  const [errorMessage, setErrorMessage] = useState("אירעה שגיאה");
+  const [success, setSuccess] = useState(false);
   const [totalBibNumberInCollection, setTotalBibNumberInCollection] = useState(0);
   const [percentProgress, setPercentProgress] = useState(0);
   const MAX_PAGE_SIZE = 100;//0-100
@@ -38,21 +39,7 @@ function App() {
     setBibs([]);
     setErrorMessage("");
     setGlobalError(false);
-  }
-
-  function flipBracketsDirection(str) {
-    function flip(c) {
-      switch (c) {
-        case '(': return ')';
-        case ')': return '(';
-        case '[': return ']';
-        case ']': return '[';
-        case '{': return '}';
-        case '}': return '{';
-        default: return c;
-      }
-    }
-    return Array.from(str).map(c => flip(c)).join('');
+    setSuccess(false);
   }
   //{book.mmsid && <Card.Link href={"https://haifa-primo.hosted.exlibrisgroup.com/primo-explore/search?query=any,contains," + book.mmsid + "&tab=haifa_all&vid=HAU&lang=iw_IL"} target="_blank"><Card.Text>הספר בקטלוג אוניברסיטת חיפה </Card.Text></Card.Link>}
   //<a href="url">link text</a>
@@ -73,6 +60,7 @@ function App() {
       return 0;
     });
   }
+
   function getHtmlString() {
     let htmlStrStart = `html dir="rtl" lang="he-IL" class="no-js no-svg">
     <head>
@@ -92,7 +80,6 @@ function App() {
       // htmlStrStart += '<tr><td>' + bibs[i].mmsid + '</td><td>' + bibs[i].title + '</td><td>' + bibs[i].callNumber + '</td><td>' + '<a href=' + "https://haifa-primo.hosted.exlibrisgroup.com/primo-explore/search?query=any,contains," + bibs[i].repId + "&tab=haifa_all&vid=HAU&lang=iw_IL target=_blank" + '>' + bibs[i].mmsid + '</a>' + '</td><td>' + "" + '</td><td>' + "" + '</td></tr>'
       // htmlStrStart += '<tr><td>' + bibs[i].mmsid + '</td><td>' + flipBracketsDirection(bibs[i].title) + '</td><td>' + bibs[i].callNumber + '</td></tr>'
     }
-    //const tableContent = bibs.map((bib, index) => <tr dangerouslySetInnerHTML={{__html: '<strong>strong text</strong>'}}><td>{bib.mmsid}</td><td>{bib.title}</td><td>{bib.callNumber}</td></tr>);
     htmlStrStart +=
       `</tbody>
             </table>
@@ -101,21 +88,6 @@ function App() {
     debugger
     return htmlStrStart;
   }
-
-  let table = `
-      <table id="tbl_exporttable_to_xls>
-          <th>MMS ID</th>
-          <th>Title</th>
-          <th>Call Number </th>
-          <tbody>`
-  for (let i = 0; i < bibs.length; i++) {
-    table += '<tr><td>' + bibs[i].mmsid + '</td><td>' + bibs[i].title + '</td><td>' + bibs[i].callNumber + '</td></tr>'
-    //table += '<tr><td>' + bibs[i].mmsid + '</td><td>' + flipBracketsDirection(bibs[i].title) + '</td><td>' + bibs[i].callNumber + '</td></tr>'
-  }
-  //const tableContent = bibs.map((bib, index) => <tr dangerouslySetInnerHTML={{__html: '<strong>strong text</strong>'}}><td>{bib.mmsid}</td><td>{bib.title}</td><td>{bib.callNumber}</td></tr>);
-  table +=
-    `</tbody>
-          </table>`
 
   function ExportToExcel(type, fn, dl) {
     console.log("This should happen only once!!!");
@@ -130,8 +102,8 @@ function App() {
   }
 
   async function downloadDocx(params) {
-    console.log("downloadDocx");
-    console.log(getHtmlString());
+    // console.log("downloadDocx");
+    // console.log(getHtmlString());
     //await HTMLtoDOCX(htmlString, headerHTMLString, documentOptions, footerHTMLString)
     // const fileBuffer = await HTMLtoDOCX(getHtmlString(), null, {
     //   table: { row: { cantSplit: true } },
@@ -142,14 +114,9 @@ function App() {
     // });
 
     ExportToExcel('xlsx');
-
+    setSuccess(true);
     // saveAs(fileBuffer, 'html-to-docx.docx');
   }
-
-  // async function fromHtmlToWordDoc() {
-  //   console.log("fromHtmlToWordDoc");
-  //   await HTMLtoDOCX(htmlString, headerHTMLString, documentOptions, footerHTMLString)
-  //}
 
   function getCallNumberField(data) {
     var parser = new DOMParser();
@@ -166,7 +133,6 @@ function App() {
   }
 
   async function handleInputEnter(pageNum) {
-    console.log("!!!!handleInputEnter");
     setBibs([]);
     setTotalBibNumberInCollection(0);
 
@@ -176,139 +142,147 @@ function App() {
     setLoading(false);
     if (response.error) {
       setGlobalError(true);
-      setErrorMessage(response.error);
+      //setErrorMessage(response.error);
     }
     else {
       if (response.response) {
-        setPercentProgress(10);
-        const data = response.response.data.bib;
-        let bibDataTotalResults = [];
-        //setBibs(data.map((bib_item) => new BibModel(bib_item.mms_id, bib_item.title)));
-        //setBibs(bibs => bibs.concat(data.map((bib_item) => new BibModel(bib_item.mms_id, bib_item.title))));
-        //const bibsDataResult = data.map((bib_item) => new BibModel(bib_item.mms_id, bib_item.title));
-        const dataArr = data.map((bib_item) => new BibModel(bib_item.mms_id, bib_item.title));
-        bibDataTotalResults = [...bibDataTotalResults, ...dataArr];
-        setTotalBibNumberInCollection(response.response.data.total_record_count);
-        if (response.response.data.bib.length < response.response.data.total_record_count) {
-          let index = response.response.data.total_record_count % 100 == 0 ? parseInt(response.response.data.total_record_count / 100) : parseInt(response.response.data.total_record_count / 100) + 1;
-          console.log("index is " + index);
-          const functions = [];
-          for (let i = 1; i < index; ++i) {
-            functions.push(i * 100);
+        if (response.response.data.total_record_count > 0) {
+          setPercentProgress(10);
+          const data = response.response.data.bib;
+          let bibDataTotalResults = [];
+          //setBibs(data.map((bib_item) => new BibModel(bib_item.mms_id, bib_item.title)));
+          //setBibs(bibs => bibs.concat(data.map((bib_item) => new BibModel(bib_item.mms_id, bib_item.title))));
+          //const bibsDataResult = data.map((bib_item) => new BibModel(bib_item.mms_id, bib_item.title));
+          const dataArr = data.map((bib_item) => new BibModel(bib_item.mms_id, bib_item.title));
+          bibDataTotalResults = [...bibDataTotalResults, ...dataArr]; //Here it is the result of all bibs in the first page
+          setTotalBibNumberInCollection(response.response.data.total_record_count);
+          if (response.response.data.bib.length < response.response.data.total_record_count) {//If there are more pages
+            let index = response.response.data.total_record_count % 100 == 0 ? parseInt(response.response.data.total_record_count / 100) : parseInt(response.response.data.total_record_count / 100) + 1;
+            const functions = []; //Array of all the pages num
+            for (let i = 1; i < index; ++i) {
+              functions.push(i * 100);
+            }
+            // const promise1 = Promise.resolve(3);
+            // const promise2 = 42;
+            // const promise3 = new Promise(function (resolve, reject) {
+            //   setTimeout(resolve, 100, 'foo');
+            // });
+
+            // Promise.all([promise1, promise2, promise3]).then(function (values) {
+            //   console.log(values);
+            // });
+            // expected output: Array [3, 42, "foo"]
+            // let promise = new Promise(function(resolve, reject) {
+            //   resolve("done");
+
+            //   reject(new Error("…")); // ignored
+            //   setTimeout(() => resolve("…")); // ignored
+            // });
+            // const promises = [];
+            // for (let i = 0; i < index; ++i) {
+            //   const promise = new Promise(function (resolve, reject) {
+            //     setLoading(true);
+            //     const response = ApiDataService.getDataById(ApiDataService.types.COLLECTIONS, searchCollectionText, i, MAX_PAGE_SIZE);
+            //     debugger
+            //     setLoading(false);
+            //     if (response.error) {
+            //       setGlobalError(true);
+            //       reject(response.error);
+            //     }
+            //     else {
+            //       if (response.response) {
+            //         debugger
+            //         const data = response.response.data.bib;
+            //         const bibsDataResult = data.map((bib_item) => new BibModel(bib_item.mms_id, bib_item.title));
+            //         debugger
+            //         resolve(bibsDataResult);
+            //       };
+            //     }
+            //   })
+            //   promises.push(promise);
+            // }
+            // Promise.all(promises).then(values => {
+            //   debugger
+            //   console.log("The valus are: " + values);
+            //   bibDataTotalResults = values;
+            // });
+            setLoading(true);
+            //Here we call to get all the bibs from pages >= 100
+            await Promise.all(
+              functions.map(async (index) => {
+                const bibsResponse = await ApiDataService.getDataById(ApiDataService.types.COLLECTIONS, searchCollectionText, index, MAX_PAGE_SIZE)
+                if (bibsResponse.error) {
+                  setGlobalError(true);
+                  //setErrorMessage(bibsResponse.error);
+                }
+                else {
+                  if (bibsResponse.response) {
+                    const data = bibsResponse.response.data.bib;
+                    const dataArr = data.map((bib_item) => new BibModel(bib_item.mms_id, bib_item.title));
+                    bibDataTotalResults = [...bibDataTotalResults, ...dataArr];
+                    setPercentProgress(30);
+                    setLoading(false);
+                  }
+                }
+              })
+            )
           }
-          // const promise1 = Promise.resolve(3);
-          // const promise2 = 42;
-          // const promise3 = new Promise(function (resolve, reject) {
-          //   setTimeout(resolve, 100, 'foo');
-          // });
 
-          // Promise.all([promise1, promise2, promise3]).then(function (values) {
-          //   console.log(values);
-          // });
-          // expected output: Array [3, 42, "foo"]
-          // let promise = new Promise(function(resolve, reject) {
-          //   resolve("done");
-
-          //   reject(new Error("…")); // ignored
-          //   setTimeout(() => resolve("…")); // ignored
-          // });
-          // const promises = [];
-          // for (let i = 0; i < index; ++i) {
-          //   const promise = new Promise(function (resolve, reject) {
-          //     setLoading(true);
-          //     const response = ApiDataService.getDataById(ApiDataService.types.COLLECTIONS, searchCollectionText, i, MAX_PAGE_SIZE);
-          //     debugger
-          //     setLoading(false);
-          //     if (response.error) {
-          //       setGlobalError(true);
-          //       reject(response.error);
-          //     }
-          //     else {
-          //       if (response.response) {
-          //         debugger
-          //         const data = response.response.data.bib;
-          //         const bibsDataResult = data.map((bib_item) => new BibModel(bib_item.mms_id, bib_item.title));
-          //         debugger
-          //         resolve(bibsDataResult);
-          //       };
-          //     }
-          //   })
-          //   promises.push(promise);
-          // }
-          // Promise.all(promises).then(values => {
-          //   debugger
-          //   console.log("The valus are: " + values);
-          //   bibDataTotalResults = values;
-          // });
           setLoading(true);
+          //Here we call to get data for every bib by its id
           await Promise.all(
-            functions.map(async (index) => {
-              const bibsResponse = await ApiDataService.getDataById(ApiDataService.types.COLLECTIONS, searchCollectionText, index, MAX_PAGE_SIZE)
-              if (bibsResponse.error) {
+            bibDataTotalResults.map(async (bib) => {
+              const bibResponse = await ApiDataService.getDataById(ApiDataService.types.NONE, bib.mmsid);
+              if (bibResponse.error) {
                 setGlobalError(true);
-                setErrorMessage(bibsResponse.error);
+                //setErrorMessage(bibResponse.error);
               }
               else {
-                if (bibsResponse.response) {
-                  const data = bibsResponse.response.data.bib;
-                  const dataArr = data.map((bib_item) => new BibModel(bib_item.mms_id, bib_item.title));
-                  bibDataTotalResults = [...bibDataTotalResults, ...dataArr];
-                  setPercentProgress(30);
-                  setLoading(false);
+                if (bibResponse.response) {
+                  const bibMarcXmlData = bibResponse.response.data.anies[0];
+                  let callNumber = getCallNumberField(bibMarcXmlData);
+                  bib.setCallNumber(callNumber.replace(/ /g, ''));
+                  setPercentProgress(60);
                 }
               }
             })
           )
-        }
-
-        setLoading(true);
-        await Promise.all(
-          bibDataTotalResults.map(async (bib) => {
-            const bibResponse = await ApiDataService.getDataById(ApiDataService.types.NONE, bib.mmsid);
-            if (bibResponse.error) {
-              setGlobalError(true);
-              setErrorMessage(bibResponse.error);
-            }
-            else {
-              if (bibResponse.response) {
-                const bibMarcXmlData = bibResponse.response.data.anies[0];
-                let callNumber = getCallNumberField(bibMarcXmlData);
-                bib.setCallNumber(callNumber.replace(/ /g, ''));
-                setPercentProgress(60);
+          //Here we call to get the representation of every bib by the id
+          await Promise.all(
+            bibDataTotalResults.map(async (bib) => {
+              const repResponse = await ApiDataService.getDataById(ApiDataService.types.REPRESENTATIONS, bib.mmsid);
+              if (repResponse.error) {
+                setGlobalError(true);
+                //setErrorMessage(repResponse.error);
               }
-            }
-          })
-        )
-        await Promise.all(
-          bibDataTotalResults.map(async (bib) => {
-            const repResponse = await ApiDataService.getDataById(ApiDataService.types.REPRESENTATIONS, bib.mmsid);
-            if (repResponse.error) {
-              setGlobalError(true);
-              setErrorMessage(repResponse.error);
-            }
-            else {
-              if (repResponse.response) {
-                if (repResponse.response.data.total_record_count > 0) {
-                  const repId = repResponse.response.data.representation[0] ? repResponse.response.data.representation[0].id : undefined;
-                  //const repId = repResponse.response.data.representation[0].thumbnail_url;
-                  const repUrl = repResponse.response.data.representation[0].delivery_url;
-                  if (!repId) {
-                    console.log("undefine!!!!");
+              else {
+                if (repResponse.response) {
+                  if (repResponse.response.data.total_record_count > 0) {
+                    const repId = repResponse.response.data.representation[0] ? repResponse.response.data.representation[0].id : undefined;
+                    //const repId = repResponse.response.data.representation[0].thumbnail_url;
+                    const repUrl = repResponse.response.data.representation[0].delivery_url;
+                    if (!repId) {
+                      console.log("undefine!!!!");
+                    }
+                    bib.setRepId(repId);
+                    bib.setRepUrl(repUrl);
                   }
-                  bib.setRepId(repId);
-                  bib.setRepUrl(repUrl);
+                  else {
+                    bib.setRepId("אין תמונה");
+                    bib.setRepUrl("");
+                  }
+                  setPercentProgress(90);
                 }
-                else {
-                  bib.setRepId("אין תמונה");
-                  bib.setRepUrl("");
-                }
-                setPercentProgress(90);
               }
-            }
-          })
-        )
-        setBibs(bibDataTotalResults);
-        setLoading(false);
+            })
+          )
+          setBibs(bibDataTotalResults);
+          setLoading(false);
+        }
+        else {
+          setGlobalError(true);
+          setErrorMessage("אין רשומות באוסף זה");
+        }
         // setLoading(true);
         // //if (bibs.length == response.response.data.total_record_count) {
         // bibsDataResult.forEach(bib => {
@@ -336,29 +310,30 @@ function App() {
 
   return (
     <div className="App">
-      <Container>
+      <Container fluid>
         <div>
-          {globalError && <Alert variant="danger">
-            {/* <Alert.Heading>Oh snap! You got an error!</Alert.Heading> */}
-            אירעה שגיאה
-            {/* <p>
-              הודעת שגיאה:
-              errorMessage
-            </p> */}
+          {globalError && <Alert variant="danger" onClose={() => setGlobalError(false)}>
+            {errorMessage}
+          </Alert>}
+          {success && <Alert variant="success" onClose={() => setSuccess(false)}>
+            הקובץ מוכן להורדה
           </Alert>}
         </div>
+        <img src="https://haifa-primo.hosted.exlibrisgroup.com/primo-explore/custom/HAU/img/library-logo.png" alt="ספריית יונס וסוראיה נזריאן" />
         <div style={{ margin: "20px" }}>
           <h2>רשומות ביבליוגרפיות לפי מספר אוסף</h2>
-          <h4>:(collectionID יש להזין) הורדת קובץ אקסל של רשומות ביבליוגרפיות וקישורים לאובייקטים הדיגיטליים שבהן, על פי מספר אוסף בעלמא</h4>
+          <h4 style={{ marginLeft: 'auto !important', paddingTop: '30px' }}>:(collectionID יש להזין) הורדת קובץ אקסל של רשומות ביבליוגרפיות וקישורים לאובייקטים הדיגיטליים שבהן, על פי מספר אוסף בעלמא</h4>
         </div>
-        <InputBox
-          icon={<i className="bi bi-collection-fill"></i>}
-          placeholder="כאן יש להכניס מספר סט לחיפוש ..."
-          onEnter={handleInputEnter}
-          inputText={searchCollectionText}
-          inputTextChange={(text) => setSearchCollectionText(text)}
-          onClear={clear}
-        />
+        <Row id="rowForInput">
+          <InputBox
+            icon={<i className="bi bi-collection-fill"></i>}
+            placeholder="כאן יש להכניס מספר אוסף (Collection ID) לחיפוש ..."
+            onEnter={handleInputEnter}
+            inputText={searchCollectionText}
+            inputTextChange={(text) => setSearchCollectionText(text)}
+            onClear={clear}
+          />
+        </Row>
         <div className="p-bib-cards">
           {loading && <div className="p-subject-spinner"><Spinner animation="border" variant="primary" /></div>}
           {/* {loading && <ProgressComponent
@@ -368,7 +343,6 @@ function App() {
             error={false}
           />} */}
         </div>
-        {/* <Button variant="link" onClick={() => downloadDocx()}><i className="bi bi-plus-circle-fill" style={{ color: 'lightskyblue' }}></i>  לחיצה להמרה  </Button> */}
       </Container>
     </div>
   );

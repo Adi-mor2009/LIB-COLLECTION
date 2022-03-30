@@ -9,7 +9,7 @@ function InputBox({ icon, placeholder, inputText, inputTextChange, onEnter, onCl
             <Form.Group controlId="formInputBox">
                 <InputGroup>
                     <InputGroup.Prepend>
-                        <Button variant="outline-secondary" onClick={() => onClear()}><i className="bi bi-x-lg" style={{ color: 'red' }}></i></Button>
+                        <Button variant="link" onClick={() => onClear()}><i className="bi bi-x-lg" style={{ color: 'red', fontSize: '2rem' }}></i></Button>
                     </InputGroup.Prepend>
                     {/* <Button variant="dark" onClick={() => onClear()}><i className="bi bi-x" style={{ color: 'red' }}></i></Button> */}
                     <Form.Control type="text" placeholder={placeholder}
@@ -19,7 +19,8 @@ function InputBox({ icon, placeholder, inputText, inputTextChange, onEnter, onCl
                         <i class="bi bi-x"></i>
                     </button> */}
                     <InputGroup.Append>
-                        <Button variant="outline-secondary" onClick={e => onEnter(e.target.value)}><i className="bi bi-filetype-xlsx" style={{ color: 'gray' }}></i></Button>
+                        <Button variant="link" onClick={e => onEnter(e.target.value)}><i className="bi bi-filetype-xlsx" style={{ color: 'black', fontSize: '2rem' }}></i></Button>
+                        {/* <Button variant="outline-secondary" onClick={e => onEnter(e.target.value)}><i className="bi bi-filetype-xlsx" style={{ color: 'gray', fontSize: '2rem' }}></i></Button> */}
                     </InputGroup.Append>
                 </InputGroup>
             </Form.Group>
