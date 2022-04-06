@@ -46,7 +46,6 @@ function App() {
 
   function sortBibs() {
     bibs.sort(function (a, b) {
-      debugger
       const nameA = a.callNumber.toUpperCase(); // ignore upper and lowercase
       const nameB = b.callNumber.toUpperCase(); // ignore upper and lowercase
       if (nameA < nameB) {
@@ -68,15 +67,15 @@ function App() {
     </head>
     <body>
         <table id="tbl_exporttable_to_xls">
-            <th>MMS ID</th>
             <th>כותר</th>
-            <th>מספר מיון</th>
-            <th>קישור</th>
             <th>כותר מתוקן</th>
             <th>הערות</th>
+            <th>קישור</th>
+            <th>MMS ID</th>
+            <th>מספר מיון</th>
             <tbody>`
     for (let i = 0; i < bibs.length; i++) {
-      htmlStrStart += '<tr><td>' + bibs[i].mmsid + '</td><td>' + bibs[i].title + '</td><td>' + bibs[i].callNumber + '</td><td>' + '<a href=' + bibs[i].repUrl + '>' + bibs[i].repId + '</a>' + '</td><td>' + "" + '</td><td>' + "" + '</td></tr>'
+      htmlStrStart += '<tr><td>' + bibs[i].title + '</td><td>' + "" + '</td><td>' + "" + '</td><td>' + '<a href=' + bibs[i].repUrl + '>' + bibs[i].repId + '</a>' + '</td><td>' + bibs[i].mmsid + '</td><td>' + bibs[i].callNumber + '</td></tr>'
       // htmlStrStart += '<tr><td>' + bibs[i].mmsid + '</td><td>' + bibs[i].title + '</td><td>' + bibs[i].callNumber + '</td><td>' + '<a href=' + "https://haifa-primo.hosted.exlibrisgroup.com/primo-explore/search?query=any,contains," + bibs[i].repId + "&tab=haifa_all&vid=HAU&lang=iw_IL target=_blank" + '>' + bibs[i].mmsid + '</a>' + '</td><td>' + "" + '</td><td>' + "" + '</td></tr>'
       // htmlStrStart += '<tr><td>' + bibs[i].mmsid + '</td><td>' + flipBracketsDirection(bibs[i].title) + '</td><td>' + bibs[i].callNumber + '</td></tr>'
     }
@@ -94,10 +93,16 @@ function App() {
     sortBibs();
     var doc = new DOMParser().parseFromString(getHtmlString(), "text/html");
     var elt = doc.getElementById('tbl_exporttable_to_xls');
-    var wb = XLSX.utils.table_to_book(elt, { sheet: "sheet1", raw: true });
+    var wb = XLSX.utils.table_to_book(elt, { Workbook: { Views: [{ RTL: true }] }, sheet: "sheet1", raw: true });
+    if (wb.Workbook) { wb.Workbook.Views[0]['RTL'] = true; } else { wb.Workbook = {}; wb.Workbook['Views'] = [{ RTL: true }]; }
+    //bibs.map(b => b.title)
+    //Math.max(...(bibs.map(b => b.length)));
+    //Math.max.apply(Math, bibs.map(function(b) { return b.title; })) + 2 
+    wb.Sheets['sheet1']['!cols'].push({ width: Math.max(...(bibs.map(b => b.title.length)))}, { width: 20 }, { width: 20 }, { width: 20 }, { width: 20 }, { width: Math.max(...(bibs.map(b => b.callNumber.length))) })
+    debugger
     setPercentProgress(100);
     return dl ?
-      XLSX.write(wb, { bookType: type, bookSST: true, type: 'base64' }) :
+      XLSX.write(wb, { bookType: type, bookSST: true, type: 'base64'}) :
       XLSX.writeFile(wb, fn || (searchCollectionText + '.' + (type || 'xlsx')));
   }
 
