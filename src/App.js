@@ -75,7 +75,7 @@ function App() {
             <th>מספר מיון</th>
             <tbody>`
     for (let i = 0; i < bibs.length; i++) {
-      htmlStrStart += '<tr><td>' + bibs[i].title + '</td><td>' + "" + '</td><td>' + "" + '</td><td>' + '<a href=' + bibs[i].repUrl + '>' + bibs[i].repId + '</a>' + '</td><td>' + bibs[i].mmsid + '</td><td>' + bibs[i].callNumber + '</td></tr>'
+      htmlStrStart += '<tr><td>' + bibs[i].title + '</td><td>' + "&nbsp;" + '</td><td>' + "&nbsp;" + '</td><td>' + '<a href=' + bibs[i].repUrl + '>' + bibs[i].repId + '</a>' + '</td><td>' + bibs[i].mmsid + '</td><td>' + bibs[i].callNumber + '</td></tr>'
       // htmlStrStart += '<tr><td>' + bibs[i].mmsid + '</td><td>' + bibs[i].title + '</td><td>' + bibs[i].callNumber + '</td><td>' + '<a href=' + "https://haifa-primo.hosted.exlibrisgroup.com/primo-explore/search?query=any,contains," + bibs[i].repId + "&tab=haifa_all&vid=HAU&lang=iw_IL target=_blank" + '>' + bibs[i].mmsid + '</a>' + '</td><td>' + "" + '</td><td>' + "" + '</td></tr>'
       // htmlStrStart += '<tr><td>' + bibs[i].mmsid + '</td><td>' + flipBracketsDirection(bibs[i].title) + '</td><td>' + bibs[i].callNumber + '</td></tr>'
     }
@@ -98,7 +98,8 @@ function App() {
     //bibs.map(b => b.title)
     //Math.max(...(bibs.map(b => b.length)));
     //Math.max.apply(Math, bibs.map(function(b) { return b.title; })) + 2 
-    wb.Sheets['sheet1']['!cols'].push({ width: Math.max(...(bibs.map(b => b.title.length)))}, { width: 20 }, { width: 20 }, { width: 20 }, { width: 20 }, { width: Math.max(...(bibs.map(b => b.callNumber.length))) })
+    //console.log("Title width: " + Math.max(...(bibs.map(b => b.title.length))));
+    wb.Sheets['sheet1']['!cols'].push({ width: 100}, { width: 20 }, { width: 20 }, { width: 20 }, { width: 20 }, { width: Math.max(...(bibs.map(b => b.callNumber.length))) })
     debugger
     setPercentProgress(100);
     return dl ?
