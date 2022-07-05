@@ -127,11 +127,11 @@ function App() {
   function getCallNumberField(data) {
     var parser = new DOMParser();
     var xmlDoc = parser.parseFromString(data, "text/xml");
-    let callNumber;
+    let callNumber = "";
     const fields = xmlDoc.getElementsByTagName("datafield");
     for (let i = 0; i < fields.length; i++) {
       if (TAG == fields[i].getAttribute('tag')) {
-        callNumber = fields[i].childNodes[0] ? fields[i].childNodes[0].innerHTML : undefined;
+        callNumber = fields[i].childNodes[0] ? fields[i].childNodes[0].innerHTML : "";
         break;
       }
     }
